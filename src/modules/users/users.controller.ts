@@ -24,6 +24,16 @@ export class UsersController {
     }
   }
 
+  @Get()
+  async getAllUsers(@Res() res: Response) {
+    try {
+      const users = await this.userService.getAllUsers();
+      return responseData(res, 200, users);
+    } catch (error) {
+      return responseError(res, error);
+    }
+  }
+
   @Get(':id')
   async getUserById(@Param() param, @Res() res: Response) {
     try {
