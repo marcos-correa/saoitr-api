@@ -21,3 +21,7 @@ export function isValidNumber(number: any): boolean {
 export function isString(value: any): boolean {
   return typeof value === 'string';
 }
+
+export function sizeBetween(value: string, min: number, max: number) {
+  return value.length >= min && value.length <= max;
+}
