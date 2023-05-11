@@ -11,79 +11,89 @@ import {
   minEmailLength,
 } from '../../shared/constants/users.constant';
 import { isValidUserData } from '../../shared/utils/users.utils';
+import * as bcrypt from 'bcrypt';
 import { newError } from 'src/shared/responses';
-import { isString, isValidNumber } from 'src/shared/utils/all.utils';
+import {
+  isString,
+  isValidNumber,
+  sizeBetween,
+} from 'src/shared/utils/all.utils';
 
 @Injectable()
 export class UsersService {
   constructor(private _prisma: PrismaService) {}
 
-  async createUser(data: UserDTO): Promise<UserCreationResponse> {
-    const validUser = await this.isValidUser(data);
-    if (validUser) {
-      const userExists = await this.checkUserExistsByEmail(data.email);
-      if (userExists) {
-        throw newError(USERS_RESPONSES.CREATION.USER_ALREADY_EXISTS);
-      }
+  async createUser(userDTO: UserDTO): Promise<UserCreationResponse> {
+    const isValidUser = await this._isValidUser(userDTO);
+    if (isValidUser) {
+      const data = {
+        ...userDTO,
+        password: await bcrypt.hash(userDTO.password, 10),
+      };
 
-      let userCreated = await this._prisma.user.create({ data });
-      if (userCreated) {
+      const createdUser = await this._prisma.user.create({ data });
+
+      if (createdUser) {
         return {
-          id: userCreated.id,
-          email: userCreated.email,
-          name: userCreated.name,
+          id: createdUser.id,
+          email: createdUser.email,
+          name: createdUser.name,
         } as UserCreationResponse;
       }
-    } else {
-      throw newError(USERS_RESPONSES.CREATION.INVALID_DATA);
     }
-  }
-
-  private async checkUserExistsByEmail(email: UserDTO['email']) {
-    return await this._prisma.user.findUnique({ where: { email } });
   }
 
   async getUserById(id: number): Promise<UserFounded> {
-    if (!this.isValidId(id)) {
-      throw newError(USERS_RESPONSES.SEARCH.INVALID_ID);
+    const isValidId = this.isValidId(id);
+    if (isValidId) {
+      id = Number(id);
+      const userFounded = await this._prisma.user.findUnique({ where: { id } });
+      if (!userFounded) {
+        throw newError(USERS_RESPONSES.SEARCH.USER_NOT_FOUND);
+      }
+      const { name, email } = userFounded;
+      return { id, name, email } as UserFounded;
     }
-    id = Number(id);
-    const userFounded = await this._prisma.user.findUnique({ where: { id } });
-    if (!userFounded) {
-      throw newError(USERS_RESPONSES.SEARCH.USER_NOT_FOUND);
-    }
-    const { name, email } = userFounded;
-    return { id, name, email } as UserFounded;
   }
 
-  isValidUser(data): Promise<boolean> {
-    if (!isValidUserData(data)) {
+  async getAllUsers(): Promise<UserFounded[]> {
+    const users = await this._prisma.user.findMany();
+    if (users) {
+      return users.map((user) => {
+        const { id, name, email } = user;
+        return { id, name, email } as UserFounded;
+      });
+    }
+  }
+
+  private async _isValidUser(user: UserDTO): Promise<boolean> {
+    if (!isValidUserData(user)) {
       throw newError(USERS_RESPONSES.CREATION.INVALID_DATA);
     }
-    if (!this.isValidEmail(data.email)) {
+    if (!this.isValidEmail(user.email)) {
       throw newError(USERS_RESPONSES.CREATION.INVALID_EMAIL);
     }
-    if (!this.isValidPassword(data.password)) {
+    if (!this.isValidPassword(user.password)) {
       throw newError(USERS_RESPONSES.CREATION.INVALID_PASSWORD);
     }
-    if (!this.isValidName(data.name)) {
+    if (!this.isValidName(user.name)) {
       throw newError(USERS_RESPONSES.CREATION.INVALID_NAME);
+    }
+    const { email } = user;
+    const userExists = await this._prisma.user.findUnique({ where: { email } });
+    if (userExists) {
+      throw newError(USERS_RESPONSES.CREATION.USER_ALREADY_EXISTS);
     }
     return Promise.resolve(true);
   }
 
   isValidEmail(email: string) {
-    console.log(email.includes('@'));
     return (
       email &&
       isString(email) &&
       email.includes('@') &&
-      this.sizebetween(email, minEmailLength, maxEmailLength)
+      sizeBetween(email, minEmailLength, maxEmailLength)
     );
-  }
-
-  sizebetween(value: string, min: number, max: number) {
-    return value.length >= min && value.length <= max;
   }
 
   isValidPassword(password: string) {
@@ -94,7 +104,10 @@ export class UsersService {
     return name && isString(name) && name.length >= 2 && name.length <= 125;
   }
 
-  isValidId(id: any) {
-    return id && isValidNumber(id);
+  async isValidId(id: any): Promise<boolean> {
+    if (!id || !isValidNumber(id)) {
+      throw newError(USERS_RESPONSES.SEARCH.INVALID_ID);
+    }
+    return Promise.resolve(true);
   }
 }
