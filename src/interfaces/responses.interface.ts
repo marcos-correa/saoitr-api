@@ -10,7 +10,6 @@ export class ErrorCode extends Error {
 type GenericResponseKey = 'SERVER_ERROR' | 'SUCCESS';
 type GenericDataResponseKey = 'INVALID_DATA' | 'SUCCESS' | 'PROPERTY_MISSING';
 
-
 // User Responses
 type UserSearchResponseKey = 'USER_NOT_FOUND' | 'INVALID_ID';
 type UserCreationResponseKey =
@@ -18,6 +17,18 @@ type UserCreationResponseKey =
   | 'INVALID_EMAIL'
   | 'INVALID_PASSWORD'
   | 'INVALID_NAME';
+
+type LoginResponsesKeys =
+  | 'INVALID_EMAIL'
+  | 'USER_DOESNT_EXISTS'
+  | 'INVALID_CREDENTIALS';
+
+type UserLoginResponse = {
+  [key in
+    | GenericResponseKey
+    | GenericDataResponseKey
+    | LoginResponsesKeys]: MessageStatus;
+};
 
 type UserCreationResponse = {
   [key in
@@ -38,5 +49,5 @@ type UserSearchResponse = {
 export type UsersResponses = {
   CREATION: UserCreationResponse;
   SEARCH: UserSearchResponse;
+  LOGIN: UserLoginResponse;
 };
-

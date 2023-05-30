@@ -14,3 +14,15 @@ export function isValidUserData(data: any) {
   }
   return false;
 }
+
+export function isValidLoginUserData(data: any) {
+  if (
+    hasAllKeysOfType<UserCreationValidated, keyof UserCreationValidated>(data, [
+      'email',
+      'password',
+    ])
+  ) {
+    return true;
+  }
+  return false;
+}

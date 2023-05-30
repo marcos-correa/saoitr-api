@@ -56,6 +56,16 @@ export class UsersService {
     }
   }
 
+  async getUserByEmail(email: string): Promise<UserDTO> {
+    const userFounded = await this._prisma.user.findUnique({
+      where: { email },
+    });
+    if (!userFounded) {
+      throw newError(USERS_RESPONSES.SEARCH.USER_NOT_FOUND);
+    }
+    return userFounded;
+  }
+
   async getAllUsers(): Promise<UserFounded[]> {
     const users = await this._prisma.user.findMany();
     if (users) {
@@ -87,6 +97,7 @@ export class UsersService {
     return Promise.resolve(true);
   }
 
+  // TODO: move this to a shared file
   isValidEmail(email: string) {
     return (
       email &&
@@ -96,6 +107,7 @@ export class UsersService {
     );
   }
 
+  // TODO: move this to a shared file
   isValidPassword(password: string) {
     return password && isString(password);
   }

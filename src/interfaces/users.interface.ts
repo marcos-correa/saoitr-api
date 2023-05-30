@@ -24,5 +24,11 @@ export type UserResponse = {
   name: string;
   email: string;
 };
+
+export type UserLogin = {
+  email: string;
+  password: string;
+};
+
 export type UserCreationResponse = UserResponse;
 export type UserFounded = UserResponse;

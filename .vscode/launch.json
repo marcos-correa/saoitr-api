@@ -15,6 +15,16 @@
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
       ]
+    },
+    {
+      "name": "Debug NestJS",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run-script", "debug"],
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**/*.js"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }

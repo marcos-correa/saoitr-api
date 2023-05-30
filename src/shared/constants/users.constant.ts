@@ -1,4 +1,4 @@
-import { UsersResponses } from "src/interfaces/responses.interface";
+import { UsersResponses } from 'src/interfaces/responses.interface';
 export const USERS_RESPONSES: UsersResponses = {
   CREATION: {
     PROPERTY_MISSING: {
@@ -8,7 +8,7 @@ export const USERS_RESPONSES: UsersResponses = {
     },
     USER_ALREADY_EXISTS: {
       message: 'Usuário já existe no banco de dados',
-      status: 400,
+      status: 422,
     },
     SERVER_ERROR: {
       message: 'Erro ao tentar cadastrar o usuário no servidor',
@@ -16,7 +16,7 @@ export const USERS_RESPONSES: UsersResponses = {
     },
     SUCCESS: {
       message: 'Cadastro realizado com sucesso',
-      status: 200,
+      status: 201,
     },
     INVALID_DATA: {
       message:
@@ -53,6 +53,38 @@ export const USERS_RESPONSES: UsersResponses = {
     INVALID_ID: {
       message: 'O id informado não é válido',
       status: 400,
+    },
+  },
+
+  LOGIN: {
+    SUCCESS: {
+      message: 'Login realizado com sucesso',
+      status: 200,
+    },
+    INVALID_DATA: {
+      message: 'Senha ou email inválidos',
+      status: 400,
+    },
+    INVALID_EMAIL: {
+      message: 'O email informado não é válido',
+      status: 400,
+    },
+    PROPERTY_MISSING: {
+      message:
+        'As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.',
+      status: 400,
+    },
+    SERVER_ERROR: {
+      message: 'Erro ao tentar realizar o login',
+      status: 500,
+    },
+    USER_DOESNT_EXISTS: {
+      message: 'Usuário informado não existe',
+      status: 401,
+    },
+    INVALID_CREDENTIALS: {
+      message: 'Credenciais inválidas',
+      status: 401,
     },
   },
 };
