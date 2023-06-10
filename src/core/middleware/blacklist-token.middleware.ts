@@ -1,4 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { TokenService } from 'src/core/token/token.service';
 import { responseData } from 'src/shared/responses';
@@ -7,6 +8,8 @@ import { responseData } from 'src/shared/responses';
 export class BlacklistTokenMiddleware implements NestMiddleware {
   constructor(private _tokenService: TokenService) {}
   async use(req: any, res: Response, next: () => void) {
+    if (!req.headers.authorization)
+      throw new responseData(res, 400, { message: 'Token is required' });
     const token = req.headers.authorization.split(' ')[1];
     this._tokenService.setSessionToken(token);
     if (!token || token === 'null') {

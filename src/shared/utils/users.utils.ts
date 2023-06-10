@@ -15,6 +15,19 @@ export function isValidUserData(data: any) {
   return false;
 }
 
+// Function to test if the data is valid
+export function isValidUserUpdateData(data: any) {
+  if (
+    hasAllKeysOfType<UserCreationValidated, keyof UserCreationValidated>(data, [
+      'name',
+      'email',
+    ])
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function isValidLoginUserData(data: any) {
   if (
     hasAllKeysOfType<UserCreationValidated, keyof UserCreationValidated>(data, [

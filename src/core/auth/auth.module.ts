@@ -4,8 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersModule } from 'src/modules/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy, jwtConstants } from './jwt.strategy';
 import { PrismaService } from 'src/database/PrismaService';
 import { TokenService } from '../token/token.service';
 

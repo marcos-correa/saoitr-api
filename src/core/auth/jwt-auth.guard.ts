@@ -4,8 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { USERS_RESPONSES } from 'src/shared/constants/users.constant';
-import { newError } from 'src/shared/responses';
 
 class NewHttpException extends HttpException {
   constructor(response: any) {

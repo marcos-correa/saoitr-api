@@ -32,3 +32,4 @@ export type UserLogin = {
 
 export type UserCreationResponse = UserResponse;
 export type UserFounded = UserResponse;
+export type UserUpdated = UserResponse;

@@ -1,4 +1,7 @@
-import { UsersResponses } from 'src/interfaces/responses.interface';
+import {
+  OccurencesResponses,
+  UsersResponses,
+} from 'src/interfaces/responses.interface';
 export const USERS_RESPONSES: UsersResponses = {
   CREATION: {
     PROPERTY_MISSING: {
@@ -33,6 +36,43 @@ export const USERS_RESPONSES: UsersResponses = {
     },
     INVALID_NAME: {
       message: 'O nome informado não é válido',
+      status: 400,
+    },
+  },
+
+  UPDATE: {
+    PROPERTY_MISSING: {
+      message:
+        'As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.',
+      status: 400,
+    },
+    USER_NOT_FOUND: {
+      message: 'Usuário não encontrado',
+      status: 400,
+    },
+    SERVER_ERROR: {
+      message: 'Erro ao tentar atualizar o usuário no servidor',
+      status: 500,
+    },
+    SUCCESS: {
+      message: 'Usuário atualizado com sucesso',
+      status: 200,
+    },
+    INVALID_DATA: {
+      message:
+        'As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.',
+      status: 400,
+    },
+    INVALID_EMAIL: {
+      message: 'O email informado não é válido',
+      status: 400,
+    },
+    INVALID_NAME: {
+      message: 'O nome informado não é válido',
+      status: 400,
+    },
+    USER_EMAIL_ALREADY_EXISTS: {
+      message: 'O email informado já está em uso',
       status: 400,
     },
   },

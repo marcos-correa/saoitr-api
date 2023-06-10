@@ -9,8 +9,6 @@ export class LoginController {
 
   @Post()
   async login(@Body() req, @Res() res: Response) {
-    console.log('login');
-    console.table(req);
     try {
       const validUserWithToken = await this._loginService.login(req);
       return responseData(res, 200, validUserWithToken);

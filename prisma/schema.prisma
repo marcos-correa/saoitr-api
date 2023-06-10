@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
   name       String
   password   String
-  occurrence Occurence[]
+  occurrence Occurrence[]
 
   @@map("users")
 }
@@ -25,11 +25,11 @@ model Token {
   @@map("tokens")
 }
 
-model Occurence {
+model Occurrence {
   id              Int    @id @default(autoincrement())
   registered_at   String
   local           String
-  occurrence_type String
+  occurrence_type Int
   km              Int
   user_id         Int
   user            User   @relation(fields: [user_id], references: [id])

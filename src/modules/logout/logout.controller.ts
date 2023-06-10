@@ -17,11 +17,11 @@ export class LogoutController {
 
   @Post()
   async logout(@Body() body, @Res() res: Response, @Req() req: any) {
-    console.log('logout');
-
     try {
       const { id } = body;
-      const token = req.headers.authorization.split(' ')[1];
+      const token =
+        this._tokenService.getSessionToken() ||
+        this._tokenService.getTokenFromRequest(req);
 
       // 10.1 - Validar o tipo do campo id, campo inválido? Erro 400
       if (!id) {
@@ -33,13 +33,7 @@ export class LogoutController {
       }
 
       // 10.2 - O usuário solicitante está autenticado? Erro 401
-      const tokenData = await this._tokenService.getToken(token);
-      const { isValid } = tokenData;
-      if (!isValid) {
-        return responseData(res, 401, {
-          message: 'O usuário solicitante não está autenticado',
-        });
-      }
+      await this._tokenService.getUserTokenId(req);
 
       // 10.3 - O usuário informado existe? (URL) Erro 401
       const UserFounded = await this._authService.validateUserById(idNumber);
