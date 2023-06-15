@@ -72,7 +72,7 @@ export class TokenService {
     return token;
   }
 
-  async getUserTokenId(req) {
+  async getAndValidateUserTokenId(req) {
     // Getting the token from the request
     const token = req.headers.authorization.split(' ')[1];
 

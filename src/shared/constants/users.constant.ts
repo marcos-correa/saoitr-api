@@ -126,6 +126,10 @@ export const USERS_RESPONSES: UsersResponses = {
       message: 'Credenciais inválidas',
       status: 401,
     },
+    INVALID_TOKEN_REQUESTED: {
+      message: 'O ID informado não corresponde ao ID do usuário solicitante ',
+      status: 401,
+    },
   },
 };
 

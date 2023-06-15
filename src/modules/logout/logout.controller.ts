@@ -33,27 +33,15 @@ export class LogoutController {
       }
 
       // 10.2 - O usuário solicitante está autenticado? Erro 401
-      await this._tokenService.getUserTokenId(req);
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
 
       // 10.3 - O usuário informado existe? (URL) Erro 401
       const UserFounded = await this._authService.validateUserById(idNumber);
-      if (!UserFounded) {
-        return responseData(res, 401, {
-          message: 'O usuário informado não existe',
-        });
-      }
 
       // 10.4 - O ID informado no body da requisição corresponde ao ID do usuário solicitante (ID armazenado no token)? Erro 401
-      const tokenDecoded = await this._jwtService.decode(token);
-      if (
-        tokenDecoded['id'] &&
-        Number(tokenDecoded['id']) !== Number(idNumber)
-      ) {
-        return responseData(res, 401, {
-          message:
-            'O ID informado não corresponde ao ID do usuário solicitante',
-        });
-      }
+      await this._authService.compareIds(Number(userTokenId), Number(idNumber));
 
       if (UserFounded) {
         await this._logoutService.logout(token);

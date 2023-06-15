@@ -31,13 +31,22 @@ export class AuthService {
 
   async validateUserById(id: number): Promise<any> {
     const userFounded = await this._usersService.getUserById(id);
-    if (userFounded) {
-      return {
-        ...userFounded,
-        password: undefined,
-      };
+    if (!userFounded) {
+      throw newError(USERS_RESPONSES.LOGIN.USER_DOESNT_EXISTS);
     }
-    return null;
+    return userFounded;
+  }
+
+  async compareIds(id1: number, id2: number): Promise<boolean> {
+    if (!id1 || !id2) {
+      throw newError(USERS_RESPONSES.LOGIN.INVALID_DATA);
+    }
+
+    if (id1 !== id2) {
+      throw newError(USERS_RESPONSES.LOGIN.INVALID_TOKEN_REQUESTED);
+    }
+
+    return Promise.resolve(id1 === id2);
   }
 
   // async login(user: UserLogin) {

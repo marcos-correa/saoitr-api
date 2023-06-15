@@ -27,7 +27,8 @@ type UserCreationResponseKey =
 type LoginResponsesKeys =
   | 'INVALID_EMAIL'
   | 'USER_DOESNT_EXISTS'
-  | 'INVALID_CREDENTIALS';
+  | 'INVALID_CREDENTIALS'
+  | 'INVALID_TOKEN_REQUESTED';
 
 type UserUpdateResponse = {
   [key in

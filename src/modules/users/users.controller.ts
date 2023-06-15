@@ -38,6 +38,7 @@ export class UsersController {
         userCreated,
       );
     } catch (error) {
+      console.log('erro-create', error);
       const { message, status } = error;
       return responseData(res, status, { message });
     }
@@ -58,7 +59,9 @@ export class UsersController {
   @Get(':id')
   async getUserById(@Param() param, @Res() res: Response, @Req() req: any) {
     try {
-      const userTokenId = await this._tokenService.getUserTokenId(req);
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
 
       if (Number(userTokenId) !== Number(param.id)) {
         return responseData(res, 401, {
@@ -91,7 +94,9 @@ export class UsersController {
       const { id } = param;
 
       // Verioficar se há token de autenticação, se não houver, erro 401
-      const userTokenId = await this._tokenService.getUserTokenId(req);
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
 
       // Verificar se o usuário solicitante é o mesmo usuário autenticado, se não for, erro 401
       if (Number(userTokenId) !== Number(id)) {
@@ -123,7 +128,9 @@ export class UsersController {
     try {
       const { id } = param;
 
-      const userTokenId = await this._tokenService.getUserTokenId(req);
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
 
       const user = await this._userService.getUserById(Number(id));
 

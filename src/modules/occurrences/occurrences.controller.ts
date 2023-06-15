@@ -15,12 +15,14 @@ import { responseData } from 'src/shared/responses';
 import { Response } from 'express';
 import { TokenService } from 'src/core/token/token.service';
 import { JwtAuthGuard } from 'src/core/auth/jwt-auth.guard';
+import { AuthService } from 'src/core/auth/auth.service';
 
 @Controller('occurrences')
 export class OccurrencesController {
   constructor(
     private _occurrencesService: OccurrencesService,
     private _tokenService: TokenService,
+    private _authService: AuthService,
   ) {}
 
   // EP 2
@@ -88,15 +90,14 @@ export class OccurrencesController {
     @Res() res: Response,
   ) {
     try {
-      const { id } = param;
-      const userTokenId = await this._tokenService.getUserTokenId(req);
+      const { id } = param; // Id da ocorrência
+
       const { user_id } = body;
-      if (Number(userTokenId) !== Number(user_id)) {
-        return responseData(res, 401, {
-          message:
-            'O usuário solicitante não corresponde ao usuário autenticado',
-        });
-      }
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
+
+      await this._authService.compareIds(userTokenId, user_id);
 
       const updatedOccurence = await this._occurrencesService.updateOccurrence(
         body,
@@ -114,18 +115,15 @@ export class OccurrencesController {
   async deleteOccurente(@Param() param, @Req() req, @Res() res: Response) {
     try {
       const { id } = param;
-      const userTokenId = await this._tokenService.getUserTokenId(req);
+      const userTokenId = await this._tokenService.getAndValidateUserTokenId(
+        req,
+      );
 
       const occurrence = await this._occurrencesService.getOccurrenceById(
         Number(id),
       );
 
-      if (occurrence.user_id !== userTokenId) {
-        return responseData(res, 401, {
-          message:
-            'O usuário solicitante não corresponde ao usuário do registro',
-        });
-      }
+      await this._authService.compareIds(occurrence.user_id, userTokenId);
 
       const deletedOccurence = await this._occurrencesService.deleteOccurrence(
         Number(id),
