@@ -152,6 +152,7 @@ export class UsersController {
         });
       }
     } catch (error) {
+      console.table(param);
       const { message, status } = error;
       return responseData(res, status, { message });
     }

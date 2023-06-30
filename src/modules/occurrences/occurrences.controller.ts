@@ -76,6 +76,7 @@ export class OccurrencesController {
       );
       return responseData(res, 201, createdOccurence);
     } catch (error) {
+      console.table(body);
       const { message, status } = error;
       return responseData(res, status, { message });
     }
@@ -105,6 +106,7 @@ export class OccurrencesController {
       );
       return responseData(res, 200, updatedOccurence);
     } catch (error) {
+      console.table(body);
       const { message, status } = error;
       return responseData(res, status, { message });
     }
@@ -138,6 +140,8 @@ export class OccurrencesController {
         });
       }
     } catch (error) {
+      console.table(param);
+
       const { message, status } = error;
       return responseData(res, status, { message });
     }

@@ -31,8 +31,8 @@ model Occurrence {
   local           String
   occurrence_type Int
   km              Int
-  user_id         Int
-  user            User   @relation(fields: [user_id], references: [id])
+  user_id         Int?
+  user            User?  @relation(fields: [user_id], references: [id])
 
   @@map("occurrences")
 }
